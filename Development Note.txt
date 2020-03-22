@@ -1,0 +1,4 @@
+2020
+
+03/22
+Add gitignore, default window32 project
