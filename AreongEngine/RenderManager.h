@@ -7,7 +7,7 @@ public:
 	RenderManager();
 	~RenderManager();
 
-	bool Init(int screenWidth, int screenHeight, HWND hWnd);
+	bool InitializeRenderManager(int screenWidth, int screenHeight, HWND hWnd);
 	void Render();
 
 	// DirectX Å¬·¡½º
