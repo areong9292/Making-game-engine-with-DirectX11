@@ -26,7 +26,7 @@ public:
 
 private:
 
-	IDXGISwapChain* SwapChain;
+	IDXGISwapChain* swapChain;
 	ID3D11Device* d3d11Device;
 	ID3D11DeviceContext* d3d11DevCon;
 	ID3D11RenderTargetView* renderTargetView;

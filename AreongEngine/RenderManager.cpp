@@ -14,6 +14,7 @@ RenderManager::~RenderManager()
 	MessageBox(0, L"~RenderManager", L"Error", MB_OK);
 }
 
+// 렌더 매니저 초기화 메소드
 bool RenderManager::InitializeRenderManager(int screenWidth, int screenHeight, HWND hWnd)
 {
 	m_d3dClass = new D3DClass();

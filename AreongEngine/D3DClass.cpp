@@ -10,8 +10,8 @@ D3DClass::D3DClass()
 D3DClass::~D3DClass()
 {
 	// 만든 COM 객체 릴리즈
-	if (SwapChain != nullptr)
-		SwapChain->Release();
+	if (swapChain != nullptr)
+		swapChain->Release();
 
 	if (d3d11Device != nullptr)
 		d3d11Device->Release();
@@ -58,7 +58,7 @@ bool D3DClass::InitializeD3DClass(int screenWidth, int screenHeight, HWND hWnd)
 
 	// Device, DeviceContext, SwapChain 생성
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL,
-		D3D11_SDK_VERSION, &swapChainDesc, &SwapChain, &d3d11Device, NULL, &d3d11DevCon);
+		D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &d3d11Device, NULL, &d3d11DevCon);
 
 	if (FAILED(result))
 	{
@@ -69,7 +69,7 @@ bool D3DClass::InitializeD3DClass(int screenWidth, int screenHeight, HWND hWnd)
 
 	// 백버퍼 생성
 	ID3D11Texture2D* BackBuffer;
-	result = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&BackBuffer);
+	result = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&BackBuffer);
 
 	if (FAILED(result))
 	{
@@ -127,8 +127,9 @@ void D3DClass::DrawScene()
 	bgColor[2] = blue;
 	bgColor[3] = 1.0f;
 
+	// 렌더 타겟 뷰(그려지는 화면)을 특정 컬러로 셋팅한다
 	d3d11DevCon->ClearRenderTargetView(renderTargetView, bgColor);
 
 	// 백버퍼를 앞으로 보낸다
-	SwapChain->Present(0, 0);
+	swapChain->Present(0, 0);
 }
