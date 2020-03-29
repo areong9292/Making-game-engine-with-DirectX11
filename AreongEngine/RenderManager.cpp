@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "RenderManager.h"
+#include "D3DClass.h"
 
 RenderManager::RenderManager()
 {
@@ -8,30 +9,22 @@ RenderManager::RenderManager()
 
 RenderManager::~RenderManager()
 {
-	if(m_d3dClass != nullptr)
-		delete m_d3dClass;
+	if (m_d3dClass != nullptr)
+		_aligned_free(m_d3dClass);
 
 	MessageBox(0, L"~RenderManager", L"Error", MB_OK);
 }
 
 // 렌더 매니저 초기화 메소드
-bool RenderManager::InitializeRenderManager(int screenWidth, int screenHeight, HWND hWnd)
+bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 {
-	m_d3dClass = new D3DClass();
+	m_d3dClass = (D3DClass*)_aligned_malloc(sizeof(D3DClass), 16);
 	if (m_d3dClass != nullptr)
 	{
 		// DirectX11 초기화
-		if (!m_d3dClass->InitializeD3DClass(screenWidth, screenHeight, hWnd))
+		if (!m_d3dClass->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hWnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
 		{
 			MessageBox(0, L"Direct3D Initialization - Failed",
-				L"Error", MB_OK);
-			return false;
-		}
-
-		// d3d 씬 초기화
-		if (!m_d3dClass->InitScene())
-		{
-			MessageBox(0, L"Scene Initialization - Failed",
 				L"Error", MB_OK);
 			return false;
 		}
@@ -42,11 +35,12 @@ bool RenderManager::InitializeRenderManager(int screenWidth, int screenHeight, H
 
 void RenderManager::Render()
 {
-	// DirectX로 매 프레임마다 컬러 값 변경 후 그린다
 	if (m_d3dClass != nullptr)
 	{
-		m_d3dClass->UpdateScene();
+		// 씬을 그리기 위해 화면을 지운다
+		m_d3dClass->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-		m_d3dClass->DrawScene();
+		// 버퍼의 내용을 화면에 출력한다
+		m_d3dClass->EndScene();
 	}
 }

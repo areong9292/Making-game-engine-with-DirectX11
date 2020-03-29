@@ -148,8 +148,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="AreongEngine.h" />
     <ClInclude Include="D3DClass.h" />
+    <ClInclude Include="DxIncludes.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -158,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp" />
     <ClCompile Include="D3DClass.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -172,6 +176,12 @@
   <ItemGroup>
     <Image Include="AreongEngine.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="HLSL\Effects.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
