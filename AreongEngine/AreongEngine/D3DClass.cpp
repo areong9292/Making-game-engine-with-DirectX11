@@ -23,17 +23,16 @@ D3DClass::D3DClass(const D3DClass& other)
 {
 }
 
-
 D3DClass::~D3DClass()
 {
 }
 
 // 전체 Direct3D 초기화 설정하는 메소드
-// screenWidth, screenHeight - SystemClass에서 만들었던 윈도우의 너비와 높이, 윈도우와 동일한 크기의 영역을 초기화하고 이용한다
+// screenWidth, screenHeight - AreongEngine.cpp에서 만들었던 윈도우의 너비와 높이, 윈도우와 동일한 크기의 영역에 DirectX를 초기화하고 이용한다
 // vsync - 수직 동기화 할건지 여부(모니터 주사율에 맞춰 렌더링 할꺼냐 아니면 가능한 한 빠르게 다시 그릴거냐)
-// hwnd - SystemClass에서 만든 윈도우 핸들, 이를 이용하여 윈도우에 접근함
+// hWnd - SystemClass에서 만든 윈도우 핸들, 이를 이용하여 윈도우에 접근함
 // screenDepth, screenNear - 윈도우에 그려질 3D환경에서의 깊이
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
+bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hWnd, bool fullscreen,
 	float screenDepth, float screenNear)
 {
 	HRESULT result;
@@ -63,34 +62,35 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	// Direct3D 초기화 전 그래픽 카드/ 모니터 주사율(새로고침 비율)을 알아야한다
 	// 컴퓨터마다 다르기 때문에 해당 정보를 조회해야한다.
+	// VSYNC 기능을 위함
 
 	// 주사율 계산 작업을 하지 않으면 DirectX가 화면을 표시할 때
 	// 버퍼 플립을 사용하지 않고 blit를 사용하게 되어 성능이 저하되고
-	// 디버그 출력에 거슬리는 에러 메세지가 출력된다
+	// 디버그 출력에 거슬리는 에러 메세지가 출력된다 - ?
 
 	// DXGI - DirectX Graphics Infrastructure의 약자로 Direct3D와 함께 쓰이는 api이다
 	// 공통적인 그래픽 기능을 처리하는 api의 집합으로 이 예제에서는 주사율 계산 작업에 쓰인다
 
 	// DirectX 그래픽 인터페이스 팩토리를 만든다
 	// 스왑체인 생성, 그래픽카드(소프트웨어적 그래픽 카드도 가능) enum에 사용
-	// 해당 예제에서는 스왑체인은 Direct3D 장치 만들면서 같이 만들기 위해 여기선 안만듬
+	// 해당 예제에서는 스왑체인은 Direct3D 장치 만들면서 같이 만들기 위해 여기선 그래픽 카드 접근용으로 사용한다
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	/// 아답터로 그래픽카드에 접근 가능
-	// 생성한 팩토리로 바로 그래픽 카드 enum을 가져온다 EnumAdapters
-	// 팩토리 객체를 사용하여 첫번째 그래픽 카드 인터페이스에 대한 아답터를 만든다.
+	// 어댑터 - 그래픽카드와 통신할 수 있는 통로라고 보면 됨
+	// 팩토리에서 어댑터(그래픽카드)에 접근 가능
+	// 생성한 팩토리로 바로 그래픽 카드 enum을 가져온다 - EnumAdapters
+	// 팩토리 객체를 사용하여 첫번째(인덱스 0) 그래픽 카드 인터페이스에 대한 아탭터를 만든다.
 	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// 팩토리에서 그래픽 카드 접근하고 그래픽 카드에서 모니터 가져온다
-	// 출력(모니터)에 대한 첫번째 아답터를 나열한다
+	// 아답터에(그래픽카드) 연결된 모니터 정보를 가져온다
 	result = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
 	{
@@ -105,23 +105,23 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		return false;
 	}
 
-	// 가능한 모든 모니터와 그래픽카드 조합을 저장할 리스트를 생성한다.
+	// 그래픽 카드와 모니터의 조합으로 표현할 수 있는 모든 조합을 저장할 리스트 생성
 	displayModeList = new DXGI_MODE_DESC[numModes];
 	if (!displayModeList)
 	{
 		return false;
 	}
 
-	// 디스플레이 모드에 대한 리스트 구조를 채워넣는다
+	// 디스플레이 모드에 대한 리스트를 채워넣는다
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// 이제 모든 디스플레이 모드에 대해 화면 너비/ 높이에 맞는 디스플레이 모드를 찾는다
+	// 이제 모든 디스플레이 모드에서 우리가 설정한 화면 너비/ 높이에 맞는 디스플레이 모드를 찾는다
 	// 적합한 것을 찾으면 모니터의 새로고침 비율의 분모와 분자 값을 저장한다
-	// 이 비율의 분자/분모 값을 조회한 뒤 설정 중에 DirectX에 그 값을 알려주면 적절한 주사율을 계산하게된다.
+	// 이 비율의 분자/분모 값을 조회한 뒤, 설정 중에 DirectX에 그 값을 알려주면 적절한 주사율을 계산하게된다.
 	for (i = 0; i < numModes; i++)
 	{
 		if (displayModeList[i].Width == (unsigned int)screenWidth)
@@ -175,8 +175,8 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	/// 스왑체인 description 구조체 설정
 	// 이 예제에서는 DXGI로 스왑체인 생성을 안하고 Direct3D로 생성한다
-	// 백버퍼에 장면을 그리고 프론트버퍼와 바꿔치기(swap) 하여 유저의 화면에 보이게 된다
-	// 그래서 스왑체인이라고 불림
+	// 백버퍼에 장면을 그린 다음 프론트버퍼와 바꿔치기(swap) 하여 유저의 화면에 보이게 된다
+	// 화면을 바꾼다 하여 스왑체인이라고 불림
 
 	// 스왑체인 description 초기화
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -214,7 +214,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	// 렌더링이 이루어질 윈도우의 핸들을 설정
-	swapChainDesc.OutputWindow = hwnd;
+	swapChainDesc.OutputWindow = hWnd;
 
 	// 멀티샘플링 off
 	swapChainDesc.SampleDesc.Count = 1;
@@ -230,7 +230,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		swapChainDesc.Windowed = true;
 	}
 
-	// 스캔라인의 정렬과 스캔라이닝을 지정되지 않음(unspecified)으로 설정
+	// 스캔 라인 그리기 모드, 스케일링 모드를 지정되지 않음(unspecified)으로 설정
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
@@ -240,12 +240,11 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// 추가 옵션 플래그를 사용하지 않음
 	swapChainDesc.Flags = 0;
 
-
 	// 피쳐 레벨(어떤 버전의 DirectX를 사용할 것인가)을 DirectX11로 설정
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 
-	/// 스왑체인 description 구조체와 피쳐레벨이 채워지면
+	/// 스왑체인 description 구조체와 피쳐레벨 작성이 완료되면 이 내용으로
 	/// 스왑체인, Direct3D 장치, Direct3D 장치 컨텍스트를 만들 수 있다.
 
 	// 스왑체인, Direct3D 디바이스, Direct3D 디바이스 컨텍스트 생성
@@ -274,7 +273,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// 이런 경우를 위해 절대 기본 그래픽카드만 사용하면 안되고 기기의 모든 비디오 카드를 나열하여
 	// 유저에게 가장 잘 맞는 그래픽 카드로 장치를 생성할 수 있게 해야한다.
 	// 요 방법 찾아볼 것
-
 
 
 	/// 스왑체인 장치가 생성되었으니 백버퍼 포인터를 받아와 스왑체인에 연결해야한다.
@@ -314,7 +312,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 
 	/// 깊이 버퍼의 description 구조체 설정 - 이를 이용해 깊이 버퍼를 만들어야
-	/// 3D 공간에서 폴리곤들이 올바르게 그려진다.
+	/// 3D 공간에서 폴리곤들이 깊이 계산이 되게 그려진다.
 	/// 동시에 스텐실 버퍼도 깊이버퍼에 연결한다.
 	/// 스텐실버퍼는 모션블러, 볼류메트릭 그림자 등의 효과를 낼때 사용한다.
 	// 깊이 버퍼의 description을 초기화
@@ -343,6 +341,9 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		return false;
 	}
 
+
+	/// 스텐실 - 특정 물체에 가려져서 뒤에 것이 안보여야 할 때 아예 그리지 않는 것
+
 	// 스텐실 상태의 description을 초기화
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
@@ -366,7 +367,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-
 	// 깊이-스텐실 상태 변수를 생성
 	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 	if (FAILED(result))
@@ -374,7 +374,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		return false;
 	}
 
-	// 깊이-스텐실 상태 변수를 설정(장치 컨텍스트 사용)
+	// 깊이-스텐실 상태 변수를 설정(장치 컨텍스트 사용) - 기본적으로 Z검사를 할 것이다
 	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 
 
@@ -388,17 +388,18 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-	// 깊이-스텐실 뷰를 생성
+	// 버퍼와 desc로 깊이-스텐실 뷰를 생성
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	/// 이제 OBSetRenderTarget 함수를 호출할 수 있다.
+	/// 이제 OMSetRenderTargets 함수를 호출할 수 있다.
 	/// 이 함수는 렌더타겟뷰와 깊이-스텐실 뷰를 출력 렌더링 파이프라인에 바인딩시킨다.
 	/// 파이프라인을 이용한 렌더링이 수행될 때 우리가 만들었던 백버퍼에 장면이 그려지고
 	/// 그 백버퍼에 그려진 것을 프론트 버퍼와 바꿔치기 하여 모니터에 출력한다.
+	/// OMSetDepthStencilState가 셋팅되어 있으면 깊이 계산도 같이한다
 
 	// 렌더타겟 뷰와 깊이-스텐실 버퍼를 각각 출력 파이프라인에 바인딩
 	m_deviceContext->OMSetRenderTargets(
@@ -407,9 +408,10 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		m_depthStencilView);	// 깊이-스텐실 뷰의 포인터
 
 
-/// 도형이 어떻게 픽셀로 그려지는지에 대한 제어를 할 수 있게한다.
-/// 화면을 와이어프레임모드로 그리거나 도형의 앞뒷면을 모두 그리도록 할 수도 있다.
-// 어떤 도형을 어떻게 그릴 것인지 결정하는 래스터화기 description을 설정
+	/// 레스터화기 단계
+	/// 도형이 어떻게 픽셀로 그려지는지에 대한 제어를 할 수 있게한다.
+	/// 화면을 와이어프레임모드로 그리거나 도형의 앞뒷면을 모두 그리도록 할 수도 있다.
+	// 어떤 도형을 어떻게 그릴 것인지 결정하는 래스터화기 description을 설정
 	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
@@ -494,6 +496,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		return false;
 	}
 
+	/// 블랜드 기능
 	// 블렌드 상태 desc 초기화
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
 
