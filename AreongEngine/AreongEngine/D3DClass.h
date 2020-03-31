@@ -1,7 +1,5 @@
 #pragma once
 
-#include "DxIncludes.h"
-
 // Direct3D 기능들을 다루는 클래스
 class D3DClass : public AlignedAllocationPolicy<16>
 {

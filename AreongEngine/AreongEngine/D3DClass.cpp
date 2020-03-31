@@ -25,6 +25,7 @@ D3DClass::D3DClass(const D3DClass& other)
 
 D3DClass::~D3DClass()
 {
+	Shutdown();
 }
 
 // 전체 Direct3D 초기화 설정하는 메소드

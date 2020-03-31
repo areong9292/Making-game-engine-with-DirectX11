@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{13a4318c-32ba-4310-bc7c-b1d1eb55d3c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DesignPattern">
+      <UniqueIdentifier>{ed72eefa-e90b-4843-991f-566dc4388b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass">
+      <UniqueIdentifier>{4da2f078-a8d7-4a97-a52a-0a07e0dea2b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -45,6 +51,36 @@
     <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\Component.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\GameObject.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\Singleton.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\Transform.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\DesignPatternIncludes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass\ColorShaderClass.h">
+      <Filter>ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass\ShaderClassIncludes.h">
+      <Filter>ShaderClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp">
@@ -62,6 +98,27 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\Component.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\GameObject.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\Transform.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass\ColorShaderClass.cpp">
+      <Filter>ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraClass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AreongEngine.rc">
@@ -75,5 +132,13 @@
     <Image Include="AreongEngine.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HLSL\Color.vs">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\Color.ps">
+      <Filter>HLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>
