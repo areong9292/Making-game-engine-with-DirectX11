@@ -39,6 +39,8 @@ ColorShaderClass::~ColorShaderClass()
 		m_vertexShader->Release();
 		m_vertexShader = nullptr;
 	}
+
+	MessageBox(0, L"~ColorShaderClass", L"Error", MB_OK);
 }
 
 bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hWnd)

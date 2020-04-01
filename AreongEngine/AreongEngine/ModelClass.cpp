@@ -20,12 +20,12 @@ ModelClass::~ModelClass()
 	}
 }
 
-bool ModelClass::Initialize(ID3D11Device * device)
+bool ModelClass::Initialize(ID3D11Device* device)
 {
 	return InitializeBuffers(device);
 }
 
-void ModelClass::Render(ID3D11DeviceContext * deviceContext)
+void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 {
 	RenderBuffers(deviceContext);
 }
@@ -35,7 +35,12 @@ int ModelClass::GetIndexCount()
 	return m_indexCount;
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device * device)
+ShaderManager::ShaderType ModelClass::GetShaderType()
+{
+	return m_shaderType;
+}
+
+bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	// 정점, 인덱스 수를 설정한다
 	m_vertexCount = 3;
@@ -127,7 +132,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void ModelClass::RenderBuffers(ID3D11DeviceContext * deviceContext)
+void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	// 버텍스 버퍼 의 단위와 오프셋 설정
 	unsigned int stride = sizeof(VertexType);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ShaderManager.h"
+
 class ModelClass : public AlignedAllocationPolicy<16>
 {
 private:
@@ -19,6 +21,8 @@ public:
 
 	int GetIndexCount();
 
+	ShaderManager::ShaderType GetShaderType();
+
 private:
 	bool InitializeBuffers(ID3D11Device* device);
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
@@ -29,5 +33,7 @@ private:
 
 	int m_vertexCount = 0;
 	int m_indexCount = 0;
+
+	ShaderManager::ShaderType m_shaderType = ShaderManager::ShaderType::ColorShader;
 };
 

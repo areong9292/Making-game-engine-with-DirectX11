@@ -7,6 +7,7 @@ ShaderManager::ShaderManager()
 	m_colorShaderClass = nullptr;
 }
 
+// 할당했던 쉐이더들 해제
 ShaderManager::~ShaderManager()
 {
 	if (m_colorShaderClass != nullptr)
@@ -14,11 +15,13 @@ ShaderManager::~ShaderManager()
 		delete m_colorShaderClass;
 		m_colorShaderClass = nullptr;
 	}
+
+	MessageBox(0, L"~ShaderManager", L"Error", MB_OK);
 }
 
+// 필요한 쉐이더들 초기화
 bool ShaderManager::Initialize(ID3D11Device* device, HWND hWnd)
 {
-	// 필요한 쉐이더들 초기화
 	m_colorShaderClass = new ColorShaderClass();
 	if (m_colorShaderClass == nullptr)
 	{
@@ -37,12 +40,23 @@ bool ShaderManager::Initialize(ID3D11Device* device, HWND hWnd)
 	return true;
 }
 
-bool ShaderManager::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+// 쉐이더 타입에 맞게 그리기
+bool ShaderManager::Render(ID3D11DeviceContext* deviceContext, int indexCount, ShaderType shaderType, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
-	if (!m_colorShaderClass->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix))
+	switch (shaderType)
 	{
-		return false;
+	case ShaderType::ColorShader:
+		if (!m_colorShaderClass->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix))
+		{
+			MessageBox(0, L"ColorShaderClass Render - Failed",
+				L"Error", MB_OK);
+			return false;
+		}
+		break;
+	case ShaderType::TextureShader:
+		break;
+	case ShaderType::LightShader:
+		break;
 	}
-
 	return true;
 }

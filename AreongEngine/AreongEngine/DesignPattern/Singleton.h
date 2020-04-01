@@ -28,6 +28,7 @@ public:
 
 			// 프로그램 종료 직전 호출 콜백
 			// 메모리 해제를 보장한다
+			// 직접 해제할 필요 없다
 			atexit(DestroyInstance);
 		}
 
