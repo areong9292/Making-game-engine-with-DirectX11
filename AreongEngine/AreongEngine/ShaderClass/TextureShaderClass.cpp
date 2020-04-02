@@ -47,7 +47,7 @@ TextureShaderClass::~TextureShaderClass()
 		m_vertexShader = nullptr;
 	}
 
-	MessageBox(0, L"~ColorShaderClass", L"Error", MB_OK);
+	MessageBox(0, L"~TextureShaderClass", L"Error", MB_OK);
 }
 
 bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hWnd)

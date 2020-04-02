@@ -69,7 +69,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		MessageBox(0, L"Make Camera Object - Failed",
 			L"Error", MB_OK);
 	}
-	if (!m_model->Initialize(m_d3dClass->GetDevice()))
+	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
@@ -112,7 +112,7 @@ bool RenderManager::Render()
 		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
 		m_model->Render(m_d3dClass->GetDeviceContext());
 
-		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(), worldMatrix, viewMatrix, projectionMatrix))
+		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(), worldMatrix, viewMatrix, projectionMatrix, m_model->GetTexture()))
 		{
 			MessageBox(0, L"ShaderManager Render - Failed",
 				L"Error", MB_OK);

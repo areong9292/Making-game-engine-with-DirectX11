@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "TextureClass.h"
 #include "ModelClass.h"
 
 ModelClass::ModelClass()
@@ -7,6 +8,13 @@ ModelClass::ModelClass()
 
 ModelClass::~ModelClass()
 {
+	// 텍스처 반환
+	if (m_texture != nullptr)
+	{
+		delete m_texture;
+		m_texture = nullptr;
+	}
+	// 버텍스, 인덱스 버퍼 반환
 	if (m_indexBuffer != nullptr)
 	{
 		m_indexBuffer->Release();
@@ -20,9 +28,14 @@ ModelClass::~ModelClass()
 	}
 }
 
-bool ModelClass::Initialize(ID3D11Device* device)
+bool ModelClass::Initialize(ID3D11Device* device, WCHAR* textureFilename)
 {
-	return InitializeBuffers(device);
+	if (!InitializeBuffers(device))
+	{
+		return false;
+	}
+
+	return LoadTexture(device, textureFilename);
 }
 
 void ModelClass::Render(ID3D11DeviceContext* deviceContext)
@@ -33,6 +46,11 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 int ModelClass::GetIndexCount()
 {
 	return m_indexCount;
+}
+
+ID3D11ShaderResourceView * ModelClass::GetTexture()
+{
+	return m_texture->GetTexture();
 }
 
 ShaderManager::ShaderType ModelClass::GetShaderType()
@@ -65,13 +83,13 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	// 임시로 삼각형 하드 코딩
 	// 정점 데이터 설정
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
 
 	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);
-	vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
 
 	// 인덱스 배열 설정
 	indices[0] = 0;
@@ -148,4 +166,15 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	// 그리기 기본형을 삼각형으로 설정
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR * textureFilename)
+{
+	m_texture = new TextureClass();
+	if (m_texture == nullptr)
+	{
+		return false;
+	}
+
+	return m_texture->Initialize(device, textureFilename);
 }
