@@ -1,0 +1,24 @@
+
+// 텍스처 자체
+Texture2D shaderTexture;
+
+// 쉐이더로 텍스쳐를 쓸 때
+// 어떻게 텍스쳐의 픽셀에 씌여지는지를 수정할 수 있게 함
+SamplerState SampleType;
+
+struct PixelInputType
+{
+	float4 position : SV_POSITION;
+	float2 tex : TEXCOORD0;
+};
+
+float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 textureColor;
+
+	// 이 텍스처 좌표 위치에서 샘플러를 사용하여
+	// 텍스처에서 픽셀 색상을 샘플링한다
+	textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+	return textureColor;
+}

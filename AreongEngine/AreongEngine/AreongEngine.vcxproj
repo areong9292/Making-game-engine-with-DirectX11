@@ -167,6 +167,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass\ColorShaderClass.h" />
     <ClInclude Include="ShaderClass\ShaderClassIncludes.h" />
+    <ClInclude Include="ShaderClass\TextureShaderClass.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ShaderClass\ColorShaderClass.cpp" />
+    <ClCompile Include="ShaderClass\TextureShaderClass.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
@@ -195,6 +197,8 @@
   <ItemGroup>
     <None Include="HLSL\Color.ps" />
     <None Include="HLSL\Color.vs" />
+    <None Include="HLSL\Texture.ps" />
+    <None Include="HLSL\Texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
