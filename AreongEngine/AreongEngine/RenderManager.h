@@ -9,7 +9,7 @@ class D3DClass;
 class CameraClass;
 class ModelClass;
 class ShaderManager;
-class RenderManager
+class RenderManager : public AlignedAllocationPolicy<16>
 {
 public:
 	RenderManager();
@@ -29,4 +29,8 @@ public:
 
 	// 쉐이더 관리하는 매니저
 	ShaderManager* m_shaderManager = nullptr;
+
+private:
+	float rotation = 0.0f;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 };

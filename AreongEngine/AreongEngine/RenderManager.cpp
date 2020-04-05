@@ -97,6 +97,14 @@ bool RenderManager::Render()
 {
 	if (m_d3dClass != nullptr)
 	{
+	//	static float rotation = 0.0f;
+
+		rotation += 3.14f * 0.01f;
+		if (rotation > 360.0f)
+		{
+			rotation = 0.0f;
+		}
+
 		// 씬을 그리기 위해 화면을 지운다
 		m_d3dClass->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -104,10 +112,13 @@ bool RenderManager::Render()
 		m_camera->Render();
 
 		// 월드, 뷰, 투영 행렬 가져온다
-		XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+		//XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 		m_d3dClass->GetWorldMatrix(worldMatrix);
 		m_camera->GetViewMatrix(viewMatrix);
 		m_d3dClass->GetProjectionMatrix(projectionMatrix);
+
+		// 회전 적용
+		worldMatrix = XMMatrixRotationY(rotation);
 
 		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
 		m_model->Render(m_d3dClass->GetDeviceContext());
