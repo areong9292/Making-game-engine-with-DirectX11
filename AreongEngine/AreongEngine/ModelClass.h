@@ -11,6 +11,7 @@ private:
 	{
 		XMFLOAT3 position;
 		XMFLOAT2 texture;	// 텍스쳐를 입힐 것이다
+		XMFLOAT3 normal;	// 법선 벡터
 	};
 
 public:
@@ -39,7 +40,7 @@ private:
 	int m_vertexCount = 0;
 	int m_indexCount = 0;
 
-	ShaderManager::ShaderType m_shaderType = ShaderManager::ShaderType::TextureShader;
+	ShaderManager::ShaderType m_shaderType = ShaderManager::ShaderType::LightShader;
 
 	TextureClass* m_texture = nullptr;
 };

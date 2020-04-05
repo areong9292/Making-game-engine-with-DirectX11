@@ -3,6 +3,7 @@
 #include "D3DClass.h"
 #include "CameraClass.h"
 #include "ModelClass.h"
+#include "LightClass.h"
 #include "ShaderManager.h"
 
 RenderManager::RenderManager()
@@ -12,6 +13,12 @@ RenderManager::RenderManager()
 
 RenderManager::~RenderManager()
 {
+	if (m_light != nullptr)
+	{
+		delete m_light;
+		m_light = nullptr;
+	}
+
 	if (m_model != nullptr)
 	{
 		delete m_model;
@@ -66,7 +73,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	m_model = new ModelClass();
 	if (m_model == nullptr)
 	{
-		MessageBox(0, L"Make Camera Object - Failed",
+		MessageBox(0, L"Make ModelClass Object - Failed",
 			L"Error", MB_OK);
 	}
 	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds"))
@@ -74,6 +81,18 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
 	}
+
+	// 라이트 클래스 초기화
+	m_light = new LightClass();
+	if (m_light == nullptr)
+	{
+		MessageBox(0, L"Make LightClass Object - Failed",
+			L"Error", MB_OK);
+	}
+
+	// 라이트 객체 셋팅
+	m_light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_light->SetDirection(0.0f, 0.0f, 1.0f);
 
 	// 쉐이더 
 	m_shaderManager = Singleton<ShaderManager>::GetInstance();
@@ -123,7 +142,7 @@ bool RenderManager::Render()
 		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
 		m_model->Render(m_d3dClass->GetDeviceContext());
 
-		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(), worldMatrix, viewMatrix, projectionMatrix, m_model->GetTexture()))
+		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(), worldMatrix, viewMatrix, projectionMatrix, m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
 		{
 			MessageBox(0, L"ShaderManager Render - Failed",
 				L"Error", MB_OK);

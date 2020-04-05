@@ -8,6 +8,7 @@ const float SCREEN_NEAR = 0.1f;
 class D3DClass;
 class CameraClass;
 class ModelClass;
+class LightClass;
 class ShaderManager;
 class RenderManager : public AlignedAllocationPolicy<16>
 {
@@ -18,6 +19,7 @@ public:
 	bool Init(int screenWidth, int screenHeight, HWND hWnd);
 	bool Render();
 
+private:
 	// DirectX 클래스
 	D3DClass* m_d3dClass = nullptr;
 
@@ -30,7 +32,8 @@ public:
 	// 쉐이더 관리하는 매니저
 	ShaderManager* m_shaderManager = nullptr;
 
-private:
+	LightClass* m_light = nullptr;
+
 	float rotation = 0.0f;
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 };

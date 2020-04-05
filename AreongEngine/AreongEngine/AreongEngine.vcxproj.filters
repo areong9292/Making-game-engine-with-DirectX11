@@ -87,6 +87,12 @@
     <ClInclude Include="TextureClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass\LightShaderClass.h">
+      <Filter>ShaderClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp">
@@ -131,6 +137,12 @@
     <ClCompile Include="TextureClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass\LightShaderClass.cpp">
+      <Filter>ShaderClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AreongEngine.rc">
@@ -156,6 +168,12 @@
       <Filter>HLSL</Filter>
     </None>
     <None Include="HLSL\Texture.vs">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\Light.ps">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\Light.vs">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>

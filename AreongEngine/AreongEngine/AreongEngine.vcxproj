@@ -163,10 +163,12 @@
     <ClInclude Include="DesignPattern\Transform.h" />
     <ClInclude Include="DxIncludes.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass\ColorShaderClass.h" />
+    <ClInclude Include="ShaderClass\LightShaderClass.h" />
     <ClInclude Include="ShaderClass\ShaderClassIncludes.h" />
     <ClInclude Include="ShaderClass\TextureShaderClass.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -182,9 +184,11 @@
     <ClCompile Include="DesignPattern\GameObject.cpp" />
     <ClCompile Include="DesignPattern\Transform.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ShaderClass\ColorShaderClass.cpp" />
+    <ClCompile Include="ShaderClass\LightShaderClass.cpp" />
     <ClCompile Include="ShaderClass\TextureShaderClass.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -200,6 +204,8 @@
   <ItemGroup>
     <None Include="HLSL\Color.ps" />
     <None Include="HLSL\Color.vs" />
+    <None Include="HLSL\Light.ps" />
+    <None Include="HLSL\Light.vs" />
     <None Include="HLSL\Texture.ps" />
     <None Include="HLSL\Texture.vs" />
   </ItemGroup>
