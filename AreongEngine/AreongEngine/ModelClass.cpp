@@ -8,6 +8,11 @@ ModelClass::ModelClass()
 
 ModelClass::~ModelClass()
 {
+	if (m_model != nullptr)
+	{
+		delete[] m_model;
+		m_model = nullptr;
+	}
 	// 텍스처 반환
 	if (m_texture != nullptr)
 	{
@@ -28,9 +33,9 @@ ModelClass::~ModelClass()
 	}
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, WCHAR* textureFilename, WCHAR* modelFileName)
 {
-	if (!InitializeBuffers(device))
+	if (!InitializeBuffers(device, modelFileName))
 	{
 		return false;
 	}
@@ -50,6 +55,9 @@ int ModelClass::GetIndexCount()
 
 ID3D11ShaderResourceView * ModelClass::GetTexture()
 {
+	if (m_texture == nullptr)
+		return nullptr;
+
 	return m_texture->GetTexture();
 }
 
@@ -58,43 +66,125 @@ ShaderManager::ShaderType ModelClass::GetShaderType()
 	return m_shaderType;
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
+bool ModelClass::ModelLoader(WCHAR * modelFileName)
 {
-	// 정점, 인덱스 수를 설정한다
-	m_vertexCount = 3;
-	m_indexCount = 3;
-
-	// 정점 배열을 만든다
-	VertexType* vertices = new VertexType[m_vertexCount];
-	if (vertices == nullptr)
+	// 파일 읽기
+	ifstream readFile(modelFileName);
+	string tmp;
+	int i = 0;
+	if (readFile.is_open())
 	{
-		MessageBox(0, L"Make vertex array fail", L"Error", MB_OK);
+		// data까지 읽음
+		readFile >> tmp >> m_vertexCount >> tmp;
+		m_indexCount = m_vertexCount;
+
+		// 모델정보 초기화 및 파일 읽기
+		m_model = new ModelType[m_vertexCount];
+
+		while (!readFile.eof())
+		{
+			// 파일 읽기
+			readFile >> m_model[i].x >> m_model[i].y >> m_model[i].z;
+			readFile >> m_model[i].tu >> m_model[i].tv;
+			readFile >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+
+			i++;
+		}
+
+		// 정점 배열을 만든다
+		vertices = new VertexType[m_vertexCount];
+		if (vertices == nullptr)
+		{
+			MessageBox(0, L"Make vertex array fail", L"Error", MB_OK);
+			return false;
+		}
+
+		// 인덱스 배열을 만든다
+		indices = new unsigned long[m_indexCount];
+		if (indices == nullptr)
+		{
+			MessageBox(0, L"Make index array fail", L"Error", MB_OK);
+			return false;
+		}
+
+		// 모델 정보를 버텍스, 인덱스 배열에 채운다
+		for (i = 0; i < m_vertexCount; i++)
+		{
+			vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+			vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+			vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
+
+			indices[i] = i;
+		}
+	}
+	else
+	{
+		readFile.close();
 		return false;
 	}
 
-	// 인덱스 배열을 만든다
-	unsigned long* indices = new unsigned long[m_indexCount];
-	if (indices == nullptr)
+	readFile.close();
+	return true;
+}
+
+bool ModelClass::InitializeBuffers(ID3D11Device* device, WCHAR* modelFileName)
+{
+	// 파일 정보가 있는 경우 그 정보로 버텍스, 인덱스 정보를 채운다
+	if (modelFileName != L"")
 	{
-		MessageBox(0, L"Make index array fail", L"Error", MB_OK);
-		return false;
+		if (!ModelLoader(modelFileName))
+		{
+			MessageBox(0, L"Model File Load fail", L"Error", MB_OK);
+			return false;
+		}
 	}
 
-	// 임시로 삼각형 하드 코딩
-	// 정점 데이터 설정
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+	// 아니면 삼각형으로 그린다
+	else
+	{
+		// 정점, 인덱스 수를 설정한다
+		m_vertexCount = 3;
+		m_indexCount = 3;
 
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
+		// 정점 배열을 만든다
+		vertices = new VertexType[m_vertexCount];
+		if (vertices == nullptr)
+		{
+			MessageBox(0, L"Make vertex array fail", L"Error", MB_OK);
+			return false;
+		}
 
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);
-	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+		// 인덱스 배열을 만든다
+		indices = new unsigned long[m_indexCount];
+		if (indices == nullptr)
+		{
+			MessageBox(0, L"Make index array fail", L"Error", MB_OK);
+			return false;
+		}
 
-	// 인덱스 배열 설정
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
+		// 임시로 삼각형 하드 코딩
+		// 정점 데이터 설정
+		vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
+		vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+
+		vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);
+		vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
+
+		vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);
+		vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+
+		// 인덱스 배열 설정
+		indices[0] = 0;
+		indices[1] = 1;
+		indices[2] = 2;
+	}
+	
+	// 정보가 제대로 안 갖춰진 경우 리턴
+	if (vertices == nullptr || indices == nullptr)
+	{
+		MessageBox(0, L"Make vertex | index array fail", L"Error", MB_OK);
+		return false;
+	}
 
 	// 각 버텍스의 정보로 버텍스 버퍼, 인덱스 버퍼를 만든다
 

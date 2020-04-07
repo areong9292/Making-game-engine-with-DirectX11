@@ -50,12 +50,15 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	{
 		MessageBox(0, L"Make Direct3D Object - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
 
 	if (!m_d3dClass->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hWnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
 	{
 		MessageBox(0, L"Direct3D Initialization - Failed",
 			L"Error", MB_OK);
+
 		return false;
 	}
 
@@ -65,6 +68,8 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	{
 		MessageBox(0, L"Make Camera Object - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
 
 	m_camera->SetPosition(0.0f, 0.0f, -5.0f);
@@ -75,11 +80,15 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	{
 		MessageBox(0, L"Make ModelClass Object - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
-	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds"))
+	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/Cube.txt"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
 
 	// 라이트 클래스 초기화
@@ -88,6 +97,8 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	{
 		MessageBox(0, L"Make LightClass Object - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
 
 	// 라이트 객체 셋팅
@@ -100,6 +111,8 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	{
 		MessageBox(0, L"Make Direct3D Object - Failed",
 			L"Error", MB_OK);
+
+		return false;
 	}
 
 	if (!m_shaderManager->Initialize(m_d3dClass->GetDevice(), hWnd))
@@ -142,7 +155,9 @@ bool RenderManager::Render()
 		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
 		m_model->Render(m_d3dClass->GetDeviceContext());
 
-		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(), worldMatrix, viewMatrix, projectionMatrix, m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
+		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(),
+										worldMatrix, viewMatrix, projectionMatrix,
+										m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
 		{
 			MessageBox(0, L"ShaderManager Render - Failed",
 				L"Error", MB_OK);
