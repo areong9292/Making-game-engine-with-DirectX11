@@ -19,6 +19,8 @@ public:
 	bool Init(int screenWidth, int screenHeight, HWND hWnd);
 	bool Render();
 
+	void MakeCube();
+
 private:
 	// DirectX Å¬·¡½º
 	D3DClass* m_d3dClass = nullptr;
@@ -36,4 +38,9 @@ private:
 
 	float rotation = 0.0f;
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX rotationMatrix, translateMatrix, resultMatrix;
+
+	vector<ModelClass*> modelList;
+
+	XMFLOAT3 modelPosition;
 };

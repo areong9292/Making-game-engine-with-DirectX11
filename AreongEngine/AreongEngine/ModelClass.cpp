@@ -4,6 +4,7 @@
 
 ModelClass::ModelClass()
 {
+	SetPosition(0.0, 0.0f, 0.0f);
 }
 
 ModelClass::~ModelClass()
@@ -59,6 +60,18 @@ ID3D11ShaderResourceView * ModelClass::GetTexture()
 		return nullptr;
 
 	return m_texture->GetTexture();
+}
+
+void ModelClass::SetPosition(float x, float y, float z)
+{
+	modelPosition.x = x;
+	modelPosition.y = y;
+	modelPosition.z = z;
+}
+
+XMFLOAT3 ModelClass::GetPosition()
+{
+	return modelPosition;
 }
 
 ShaderManager::ShaderType ModelClass::GetShaderType()

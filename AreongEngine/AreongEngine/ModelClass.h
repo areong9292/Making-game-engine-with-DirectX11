@@ -34,6 +34,9 @@ public:
 
 	ID3D11ShaderResourceView* GetTexture();
 
+	void SetPosition(float x, float y, float z);
+	XMFLOAT3 GetPosition();
+
 private:
 	bool ModelLoader(WCHAR* modelFileName);
 	bool InitializeBuffers(ID3D11Device* device, WCHAR* modelFileName = L"");
@@ -56,4 +59,6 @@ private:
 	TextureClass* m_texture = nullptr;
 
 	ModelType* m_model = nullptr;
+
+	XMFLOAT3 modelPosition;
 };

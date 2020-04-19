@@ -12,5 +12,5 @@
 #include <DirectXMath.h>
 
 using namespace DirectX;
-
+using namespace std;
 #include "AlignedAllocationPolicy.h"

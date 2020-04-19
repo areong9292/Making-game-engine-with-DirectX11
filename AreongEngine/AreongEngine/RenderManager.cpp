@@ -19,11 +19,24 @@ RenderManager::~RenderManager()
 		m_light = nullptr;
 	}
 
+	ModelClass* temp;
+	for (int i = 0; i < modelList.size(); i++)
+	{
+		temp = modelList[i];
+		if (temp != nullptr)
+		{
+			delete temp;
+			temp = nullptr;
+		}
+	}
+
+	/*
 	if (m_model != nullptr)
 	{
 		delete m_model;
 		m_model = nullptr;
 	}
+	*/
 
 	if (m_camera != nullptr)
 	{
@@ -72,7 +85,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		return false;
 	}
 
-	m_camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// 모델 클래스 초기화
 	m_model = new ModelClass();
@@ -90,6 +103,8 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 
 		return false;
 	}
+
+	modelList.push_back(m_model);
 
 	// 라이트 클래스 초기화
 	m_light = new LightClass();
@@ -149,25 +164,68 @@ bool RenderManager::Render()
 		m_camera->GetViewMatrix(viewMatrix);
 		m_d3dClass->GetProjectionMatrix(projectionMatrix);
 
+		rotationMatrix = worldMatrix;
+		translateMatrix = worldMatrix;
+
 		// 회전 적용
-		worldMatrix = XMMatrixRotationY(rotation);
+		//worldMatrix = XMMatrixRotationY(rotation);
 
-		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
-		m_model->Render(m_d3dClass->GetDeviceContext());
-
-		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), m_model->GetIndexCount(), m_model->GetShaderType(),
-										worldMatrix, viewMatrix, projectionMatrix,
-										m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
+		for (int i = 0; i < modelList.size(); i++)
 		{
-			MessageBox(0, L"ShaderManager Render - Failed",
-				L"Error", MB_OK);
+			modelPosition = modelList[i]->GetPosition();
 
-			return false;
+			// Y축 기준으로 회전시킨다
+			rotationMatrix = XMMatrixRotationY(rotation);
+
+			// 모델의 위치로 월드 행렬 이동
+			translateMatrix = XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z);
+
+			// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
+			resultMatrix = /*scaleMatrix **/ rotationMatrix * translateMatrix;
+
+			// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
+			modelList[i]->Render(m_d3dClass->GetDeviceContext());
+
+			if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), modelList[i]->GetIndexCount(), modelList[i]->GetShaderType(),
+				resultMatrix, viewMatrix, projectionMatrix,
+				modelList[i]->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
+			{
+				MessageBox(0, L"ShaderManager Render - Failed",
+					L"Error", MB_OK);
+
+				return false;
+			}
+
+			rotationMatrix = worldMatrix;
+			translateMatrix = worldMatrix;
 		}
-
+		
 		// 버퍼의 내용을 화면에 출력한다
 		m_d3dClass->EndScene();
-
 	}
 	return true;
+}
+
+void RenderManager::MakeCube()
+{
+	// 모델 클래스 초기화
+	ModelClass* temp = new ModelClass();
+	if (temp == nullptr)
+	{
+		MessageBox(0, L"Make ModelClass Object - Failed",
+			L"Error", MB_OK);
+		
+		return;
+	}
+	if (!temp->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/Cube.txt"))
+	{
+		MessageBox(0, L"ModelClass Initialization - Failed",
+			L"Error", MB_OK);
+
+		return;
+	}
+
+	temp->SetPosition(-5.0f, 0.0f, 0.0f);
+
+	modelList.push_back(temp);
 }
