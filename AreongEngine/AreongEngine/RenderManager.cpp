@@ -225,7 +225,16 @@ void RenderManager::MakeCube()
 		return;
 	}
 
-	temp->SetPosition(-5.0f, 0.0f, 0.0f);
+	// 시드 값을 얻기 위한 random_device 생성
+	random_device rd;
+
+	// random_device를 통해 난수 생성 엔진을 초기화
+	mt19937 gen(rd());
+
+	// -5.0 부터 5.0까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의
+	uniform_real_distribution<float> dis(-5.0f, 5.0f);
+
+	temp->SetPosition(dis(gen), dis(gen), 0.0f);
 
 	modelList.push_back(temp);
 }
