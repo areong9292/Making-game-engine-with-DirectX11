@@ -37,6 +37,9 @@ public:
 	void SetPosition(float x, float y, float z);
 	XMFLOAT3 GetPosition();
 
+	void SetDiffuseColor(float x, float y, float z, float w);
+	XMFLOAT4 GetDiffuseColor();
+
 private:
 	bool ModelLoader(WCHAR* modelFileName);
 	bool InitializeBuffers(ID3D11Device* device, WCHAR* modelFileName = L"");
@@ -61,4 +64,6 @@ private:
 	ModelType* m_model = nullptr;
 
 	XMFLOAT3 modelPosition;
+
+	XMFLOAT4 modelDiffustColor;
 };

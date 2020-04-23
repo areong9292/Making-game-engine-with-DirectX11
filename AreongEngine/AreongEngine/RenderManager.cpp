@@ -85,7 +85,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		return false;
 	}
 
-	m_camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_camera->SetPosition(0.0f, 100.0f, -300.0f);
 
 	// 모델 클래스 초기화
 	m_model = new ModelClass();
@@ -96,7 +96,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 
 		return false;
 	}
-	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/Cube.txt"))
+	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/scrat.txt"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
@@ -117,7 +117,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 	}
 
 	// 라이트 객체 셋팅
-	m_light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_light->SetDirection(0.0f, 0.0f, 1.0f);
 
 	// 쉐이더 
@@ -188,7 +188,7 @@ bool RenderManager::Render()
 
 			if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), modelList[i]->GetIndexCount(), modelList[i]->GetShaderType(),
 				resultMatrix, viewMatrix, projectionMatrix,
-				modelList[i]->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor()))
+				modelList[i]->GetTexture(), m_light->GetDirection(), modelList[i]->GetDiffuseColor()))//m_light->GetDiffuseColor()))
 			{
 				MessageBox(0, L"ShaderManager Render - Failed",
 					L"Error", MB_OK);
@@ -225,6 +225,7 @@ void RenderManager::MakeCube()
 		return;
 	}
 
+	// 랜덤한 위치로 좌표 지정
 	// 시드 값을 얻기 위한 random_device 생성
 	random_device rd;
 
@@ -237,4 +238,22 @@ void RenderManager::MakeCube()
 	temp->SetPosition(dis(gen), dis(gen), 0.0f);
 
 	modelList.push_back(temp);
+}
+
+// 모델 리스트에서 다음 모델을 하나를 선택한다
+void RenderManager::SelectPlayer()
+{
+	_selectIndex++;
+
+	if (_selectIndex >= modelList.size())
+	{
+		_selectIndex = 0;
+	}
+
+	if (m_selectedModel != nullptr)
+		m_selectedModel->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	m_selectedModel = modelList[_selectIndex];
+	m_selectedModel->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);
+
 }

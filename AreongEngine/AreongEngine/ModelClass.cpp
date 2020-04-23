@@ -5,6 +5,7 @@
 ModelClass::ModelClass()
 {
 	SetPosition(0.0, 0.0f, 0.0f);
+	SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 ModelClass::~ModelClass()
@@ -72,6 +73,19 @@ void ModelClass::SetPosition(float x, float y, float z)
 XMFLOAT3 ModelClass::GetPosition()
 {
 	return modelPosition;
+}
+
+void ModelClass::SetDiffuseColor(float x, float y, float z, float w)
+{
+	modelDiffustColor.x = x;
+	modelDiffustColor.y = y;
+	modelDiffustColor.z = z;
+	modelDiffustColor.w = w;
+}
+
+XMFLOAT4 ModelClass::GetDiffuseColor()
+{
+	return modelDiffustColor;
 }
 
 ShaderManager::ShaderType ModelClass::GetShaderType()

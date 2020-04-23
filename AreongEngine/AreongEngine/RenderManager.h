@@ -20,6 +20,7 @@ public:
 	bool Render();
 
 	void MakeCube();
+	void SelectPlayer();
 
 private:
 	// DirectX Å¬·¡½º
@@ -43,4 +44,8 @@ private:
 	vector<ModelClass*> modelList;
 
 	XMFLOAT3 modelPosition;
+
+	int _selectIndex = 0;
+
+	ModelClass* m_selectedModel = nullptr;
 };
