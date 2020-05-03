@@ -1,15 +1,36 @@
 #include "stdafx.h"
 #include "TextureClass.h"
+#include "ModelDataParserClass.h"
+
 #include "ModelClass.h"
 
 ModelClass::ModelClass()
 {
 	SetPosition(0.0, 0.0f, 0.0f);
 	SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// 파일 확장자 셋팅
+	SetExtension(L".obj");
+
+	// 파싱 된 파일 확장자 셋팅
+	parsedModelExtension = L".txt";
+	//wcscpy_s(parsedModelExtension, wcslen(L".txt"), L".txt");
+
+	modelParser = new ModelDataParserClass();
+	if (modelParser == nullptr)
+	{
+		MessageBox(0, L"modelParser Init fail", L"Error", MB_OK);
+	}
 }
 
 ModelClass::~ModelClass()
 {
+	if (modelParser != nullptr)
+	{
+		delete modelParser;
+		modelParser = nullptr;
+	}
+
 	if (m_model != nullptr)
 	{
 		delete[] m_model;
@@ -88,9 +109,73 @@ XMFLOAT4 ModelClass::GetDiffuseColor()
 	return modelDiffustColor;
 }
 
+void ModelClass::SetExtension(WCHAR * extension)
+{
+	// 파일 확장자 셋팅
+	modelExtension = extension;
+	//wcscpy_s(modelExtension, wcslen(extension), extension);
+}
+
 ShaderManager::ShaderType ModelClass::GetShaderType()
 {
 	return m_shaderType;
+}
+
+bool ModelClass::CheckAndModelLoader(WCHAR * modelFileName)
+{
+	// 파일 있는 지 여부 체크
+	struct stat buffer;
+
+	WCHAR txtFilePath[100];
+	::ZeroMemory(txtFilePath, sizeof(txtFilePath));
+
+	WCHAR modelFilePath[100];
+	::ZeroMemory(modelFilePath, sizeof(modelFilePath));
+
+	//wmemset(modelFilePath, 0, 100);
+
+	//txtFilePath = modelFileName;
+	wcscpy_s(txtFilePath, 100, modelFileName);
+	wcscat_s(txtFilePath, 100, parsedModelExtension);
+
+	//modelFilePath = modelFileName;
+	wcscpy_s(modelFilePath, 100, modelFileName);
+	wcscat_s(modelFilePath, 100, modelExtension);
+
+	_bstr_t existCheck(txtFilePath);
+
+	// 해당 파일이 존재하는 경우 모델 로드 진행
+	if (stat(existCheck, &buffer) == 0)
+	{
+		if (!ModelLoader(txtFilePath))
+		{
+			MessageBox(0, L"Model File Load fail", L"Error", MB_OK);
+			return false;
+		}
+	}
+
+	// 없는 경우 파일 파싱 후 모델 로드 진행
+	else
+	{
+		if (modelParser != nullptr)
+		{
+			modelParser->ProcessParser(modelFilePath, txtFilePath, modelExtension);
+
+			_bstr_t existCheck(txtFilePath);
+
+			// 해당 파일이 존재하는 경우 모델 로드 진행
+			if (stat(existCheck, &buffer) == 0)
+			{
+				if (!ModelLoader(txtFilePath))
+				{
+					MessageBox(0, L"Model File Load fail", L"Error", MB_OK);
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
 }
 
 bool ModelClass::ModelLoader(WCHAR * modelFileName)
@@ -159,9 +244,9 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device, WCHAR* modelFileName)
 	// 파일 정보가 있는 경우 그 정보로 버텍스, 인덱스 정보를 채운다
 	if (modelFileName != L"")
 	{
-		if (!ModelLoader(modelFileName))
+		if (!CheckAndModelLoader(modelFileName))
 		{
-			MessageBox(0, L"Model File Load fail", L"Error", MB_OK);
+			MessageBox(0, L"CheckAndModelLoader fail", L"Error", MB_OK);
 			return false;
 		}
 	}

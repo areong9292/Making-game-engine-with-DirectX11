@@ -2,6 +2,7 @@
 
 #include "ShaderManager.h"
 class TextureClass;
+class ModelDataParserClass;
 class ModelClass : public AlignedAllocationPolicy<16>
 {
 private:
@@ -40,7 +41,10 @@ public:
 	void SetDiffuseColor(float x, float y, float z, float w);
 	XMFLOAT4 GetDiffuseColor();
 
+	void SetExtension(WCHAR* extension);
+
 private:
+	bool CheckAndModelLoader(WCHAR* modelFileName);
 	bool ModelLoader(WCHAR* modelFileName);
 	bool InitializeBuffers(ID3D11Device* device, WCHAR* modelFileName = L"");
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
@@ -66,4 +70,9 @@ private:
 	XMFLOAT3 modelPosition;
 
 	XMFLOAT4 modelDiffustColor;
+
+	WCHAR* modelExtension = nullptr;
+	WCHAR* parsedModelExtension = nullptr;
+
+	ModelDataParserClass* modelParser = nullptr;
 };

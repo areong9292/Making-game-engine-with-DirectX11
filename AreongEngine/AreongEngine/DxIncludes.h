@@ -5,6 +5,7 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
+
 // 링크한 라이브러리들, DirectX타입 정의와 같은 것들에 대한 헤더 추가
 #include <dxgi.h>
 #include <d3dcommon.h>

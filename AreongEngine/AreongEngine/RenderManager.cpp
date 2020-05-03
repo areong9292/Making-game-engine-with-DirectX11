@@ -96,7 +96,7 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 
 		return false;
 	}
-	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/scrat.txt"))
+	if (!m_model->Initialize(m_d3dClass->GetDevice(), L"./Resources/Textures/seafloor.dds", L"./Resources/Models/Parsed/scrat"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
@@ -217,7 +217,7 @@ void RenderManager::MakeCube()
 		
 		return;
 	}
-	if (!temp->Initialize(m_d3dClass->GetDevice(), L"./Data/seafloor.dds", L"./Data/Cube.txt"))
+	if (!temp->Initialize(m_d3dClass->GetDevice(), L"./Resources/Textures/seafloor.dds", L"./Resources/Models/Parsed/Cube.txt"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);

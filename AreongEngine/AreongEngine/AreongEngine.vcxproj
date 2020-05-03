@@ -165,6 +165,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="ModelDataParserClass.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass\ColorShaderClass.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="ModelDataParserClass.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ShaderClass\ColorShaderClass.cpp" />
     <ClCompile Include="ShaderClass\LightShaderClass.cpp" />
