@@ -32,6 +32,7 @@ private:
 	bool isExistModelFile(WCHAR* fileName);
 
 	bool ParsingOBJ(WCHAR* fileName, WCHAR* resultFileName);
+	bool ParsingFBX(WCHAR* fileName, WCHAR* resultFileName);
 	bool ReadFileCounts(WCHAR* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount);
 	bool LoadDataStructures(WCHAR* filename, WCHAR* resultFileName, int vertexCount, int textureCount, int normalCount, int faceCount);
 };

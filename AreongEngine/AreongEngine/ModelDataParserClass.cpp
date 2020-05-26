@@ -26,6 +26,15 @@ bool ModelDataParserClass::ProcessParser(WCHAR* fileName, WCHAR* resultFileName,
 			return false;
 		}
 	}
+	// 타입에 따른 다른 파싱 처리
+	if (wcscmp(modelExtension, L".fbx") == 0)
+	{
+		if (!ParsingFBX(fileName, resultFileName))
+		{
+			MessageBox(0, L"ParsingFBX failed", L"Error", MB_OK);
+			return false;
+		}
+	}
 
 	// 성공 여부 보여줌
 	cout << "\nFile has been converted." << endl;
@@ -81,6 +90,11 @@ bool ModelDataParserClass::ParsingOBJ(WCHAR* fileName, WCHAR* resultFileName)
 	}
 
 	return true;
+}
+
+bool ModelDataParserClass::ParsingFBX(WCHAR * fileName, WCHAR * resultFileName)
+{
+	return false;
 }
 
 bool ModelDataParserClass::ReadFileCounts(WCHAR* filename, int& vertexCount, int& textureCount, int & normalCount, int& faceCount)
