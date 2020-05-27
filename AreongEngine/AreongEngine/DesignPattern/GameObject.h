@@ -1,48 +1,41 @@
 #pragma once
-
-#include <list>
-#include <string>
-
+#include "../stdafx.h"
+#include "Component.h"
 #include "Transform.h"
-using namespace std;
 
-class Component;
 class GameObject
 {
 public:
 	GameObject();
-	GameObject(const char* name);
 	GameObject(string name);
 	~GameObject();
 
-	template <typename T> T* getComponent();
-	template <typename T> T* addComponent();
+	void SetName(string name);
 
-	Transform* const transform;
+	template <typename T> T* GetComponent();
+	template <typename T> T* AddComponent();
 
-	list<Component*> getComponents();
+	int GetComponentCount();
 
-	const char* getName();
+	// 이 오브젝트의 이름
+	string _name;
+
+	Transform* _transform = nullptr;
 
 private:
-	void deleteTransforms();
-	void releaseComponents();
-
-private:
-	list<Component*> _components;
-	const char* _name;
+	vector<Component*> _listComponent;
 };
 
-template <typename T> T* GameObject::getComponent()
+template<typename T>
+inline T * GameObject::GetComponent()
 {
-	// 컴포넌트 리스트를 돌면서 같은 타입의 컴포넌트를 찾는다
-	for (auto component : _components)
+	for (int i = 0; i < (int)_listComponent.size(); i++)
 	{
 		// dynamic_cast
 		// 상속관계를 다 뒤져서 같은 타입이 있는 경우
 		// 컴포넌트 타입에서 T 타입으로 변경한다
 		// 없으면 nullptr을 가지게 된다
-		T* target = dynamic_cast<T*>(component);
+		T* target = dynamic_cast<T*>(_listComponent[i]);
 		if (target != nullptr)
 			return target;
 	}
@@ -50,16 +43,16 @@ template <typename T> T* GameObject::getComponent()
 	return nullptr;
 }
 
-template <typename T> T* GameObject::addComponent()
+template<typename T>
+inline T * GameObject::AddComponent()
 {
-	// 컴포넌트 상속관계가 아닐경우 false 리턴함
+	// 컴포넌트 상속관계가 아닐경우 nullptr 리턴함
 	if (!is_base_of<Component, T>::value)
 		return nullptr;
 
 	// 상속관계가 맞을 경우 새로운 컴포넌트 객체 생성 후
 	// 초기화 작업 후 리스트에 넣어준다
 	T* component = new T(this);
-	component->onCreate();
 	_components.push_back(component);
 
 	return component;

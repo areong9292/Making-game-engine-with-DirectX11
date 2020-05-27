@@ -54,16 +54,7 @@
     <ClInclude Include="ShaderManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DesignPattern\Component.h">
-      <Filter>DesignPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="DesignPattern\GameObject.h">
-      <Filter>DesignPattern</Filter>
-    </ClInclude>
     <ClInclude Include="DesignPattern\Singleton.h">
-      <Filter>DesignPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="DesignPattern\Transform.h">
       <Filter>DesignPattern</Filter>
     </ClInclude>
     <ClInclude Include="DesignPattern\DesignPatternIncludes.h">
@@ -96,6 +87,15 @@
     <ClInclude Include="ModelDataParserClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="DesignPattern\GameObject.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\Component.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignPattern\Transform.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp">
@@ -115,15 +115,6 @@
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DesignPattern\Component.cpp">
-      <Filter>DesignPattern</Filter>
-    </ClCompile>
-    <ClCompile Include="DesignPattern\GameObject.cpp">
-      <Filter>DesignPattern</Filter>
-    </ClCompile>
-    <ClCompile Include="DesignPattern\Transform.cpp">
-      <Filter>DesignPattern</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass\ColorShaderClass.cpp">
       <Filter>ShaderClass</Filter>
@@ -148,6 +139,15 @@
     </ClCompile>
     <ClCompile Include="ModelDataParserClass.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\GameObject.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\Component.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignPattern\Transform.cpp">
+      <Filter>DesignPattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

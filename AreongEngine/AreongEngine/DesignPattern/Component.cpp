@@ -1,7 +1,6 @@
 #include "Component.h"
-#include "GameObject.h"
 
-Component::Component(GameObject* gameObject) : gameObject(gameObject), transform(gameObject->transform)
+Component::Component()
 {
 }
 
@@ -9,11 +8,12 @@ Component::~Component()
 {
 }
 
-void Component::setOwner(GameObject * pOwner)
+string Component::GetComponentName()
 {
+	return _componentName;
 }
 
-GameObject * Component::GetOwner() const
+void Component::SetComponentName(string componentName)
 {
-	return m_pOwner;
+	_componentName = componentName;
 }

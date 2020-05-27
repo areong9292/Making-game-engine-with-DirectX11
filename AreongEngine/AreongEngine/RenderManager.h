@@ -10,6 +10,8 @@ class CameraClass;
 class ModelClass;
 class LightClass;
 class ShaderManager;
+class GameObject;
+class Transform;
 class RenderManager : public AlignedAllocationPolicy<16>
 {
 public:
@@ -48,4 +50,8 @@ private:
 	int _selectIndex = 0;
 
 	ModelClass* m_selectedModel = nullptr;
+
+
+	GameObject* testObj = nullptr;
+	Transform* testTransform;
 };

@@ -13,6 +13,12 @@ RenderManager::RenderManager()
 
 RenderManager::~RenderManager()
 {
+	if (testObj != nullptr)
+	{
+		delete testObj;
+		testObj = nullptr;
+	}
+
 	if (m_light != nullptr)
 	{
 		delete m_light;
@@ -20,7 +26,7 @@ RenderManager::~RenderManager()
 	}
 
 	ModelClass* temp;
-	for (int i = 0; i < modelList.size(); i++)
+	for (int i = 0; i < (int)modelList.size(); i++)
 	{
 		temp = modelList[i];
 		if (temp != nullptr)
@@ -137,6 +143,14 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		return false;
 	}
 
+	testObj = new GameObject("1234");
+	if (testObj == nullptr)
+	{
+		MessageBox(0, L"GameObject Initialization - Failed",
+			L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
@@ -170,7 +184,7 @@ bool RenderManager::Render()
 		// 회전 적용
 		//worldMatrix = XMMatrixRotationY(rotation);
 
-		for (int i = 0; i < modelList.size(); i++)
+		for (int i = 0; i < (int)modelList.size(); i++)
 		{
 			modelPosition = modelList[i]->GetPosition();
 
@@ -217,7 +231,7 @@ void RenderManager::MakeCube()
 		
 		return;
 	}
-	if (!temp->Initialize(m_d3dClass->GetDevice(), L"./Resources/Textures/seafloor.dds", L"./Resources/Models/Parsed/Cube.txt"))
+	if (!temp->Initialize(m_d3dClass->GetDevice(), L"./Resources/Textures/seafloor.dds", L"./Resources/Models/Parsed/Cube"))
 	{
 		MessageBox(0, L"ModelClass Initialization - Failed",
 			L"Error", MB_OK);
@@ -238,6 +252,13 @@ void RenderManager::MakeCube()
 	temp->SetPosition(dis(gen), dis(gen), 0.0f);
 
 	modelList.push_back(temp);
+
+	//std::cout << testObj->_name << endl;
+	testTransform = testObj->GetComponent<Transform>();
+	if (testTransform != nullptr)
+	{
+		cout << testTransform->GetComponentName() << endl;
+	}
 }
 
 // 모델 리스트에서 다음 모델을 하나를 선택한다
@@ -245,7 +266,7 @@ void RenderManager::SelectPlayer()
 {
 	_selectIndex++;
 
-	if (_selectIndex >= modelList.size())
+	if (_selectIndex >= (int)modelList.size())
 	{
 		_selectIndex = 0;
 	}
