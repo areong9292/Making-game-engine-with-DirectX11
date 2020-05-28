@@ -14,6 +14,7 @@ Transform::~Transform()
 {
 }
 
+// 매 프레임마다 호출
 void Transform::UpdateComponent()
 {
 }

@@ -253,7 +253,7 @@ void RenderManager::MakeCube()
 
 	modelList.push_back(temp);
 
-	//std::cout << testObj->_name << endl;
+	// 오브젝트에서 Transform 컴포넌트 가져옴
 	testTransform = testObj->GetComponent<Transform>();
 	if (testTransform != nullptr)
 	{

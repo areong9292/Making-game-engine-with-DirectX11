@@ -34,7 +34,7 @@ inline T * GameObject::GetComponent()
 		// dynamic_cast
 		// 상속관계를 다 뒤져서 같은 타입이 있는 경우
 		// 컴포넌트 타입에서 T 타입으로 변경한다
-		// 없으면 nullptr을 가지게 된다
+		// 없으면 nullptr을 리턴한다
 		T* target = dynamic_cast<T*>(_listComponent[i]);
 		if (target != nullptr)
 			return target;

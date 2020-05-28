@@ -18,6 +18,7 @@ GameObject::GameObject(string name)
 
 GameObject::~GameObject()
 {
+	// 모든 컴포넌트를 해제한다
 	for (int i = 0; i < (int)_listComponent.size(); i++)
 	{
 		delete _listComponent[i];
