@@ -17,3 +17,10 @@ void PhysicsComponent::UpdateComponent()
 
 	//cout << "PhysicsComponent Update" << endl;
 }
+
+bool PhysicsComponent::Init(Transform * transform)
+{
+	objTransform = transform;
+
+	return true;
+}

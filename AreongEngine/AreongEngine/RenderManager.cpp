@@ -13,13 +13,14 @@ RenderManager::RenderManager()
 }
 
 RenderManager::~RenderManager()
-{
+{	
+	/*
 	if (testObj != nullptr)
 	{
 		delete testObj;
 		testObj = nullptr;
 	}
-
+	*/
 	if (m_light != nullptr)
 	{
 		delete m_light;
@@ -177,6 +178,27 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 			L"Error", MB_OK);
 
 		return false;
+	}
+
+	PhysicsComponent* testPhysicsComponent = testObj->AddComponent<PhysicsComponent>();
+	if (testPhysicsComponent == nullptr)
+	{
+		if (testModelComponent == nullptr)
+		{
+			MessageBox(0, L"Add PhysicsComponent - Failed",
+				L"Error", MB_OK);
+			return false;
+		}
+	}
+
+	if (!testPhysicsComponent->Init(testObj->GetComponent<Transform>()))
+	{
+		if (testModelComponent == nullptr)
+		{
+			MessageBox(0, L"PhysicsComponent Initialization - Failed",
+				L"Error", MB_OK);
+			return false;
+		}
 	}
 
 	gameObjectList.push_back(testObj);
