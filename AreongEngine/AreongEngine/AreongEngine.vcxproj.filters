@@ -105,6 +105,9 @@
     <ClInclude Include="ComponentIncludes.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Components\PhysicsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp">
@@ -159,6 +162,9 @@
       <Filter>DesignPattern</Filter>
     </ClCompile>
     <ClCompile Include="Components\ModelComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\PhysicsComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
