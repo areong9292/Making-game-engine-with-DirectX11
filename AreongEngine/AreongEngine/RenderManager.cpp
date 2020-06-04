@@ -249,49 +249,65 @@ bool RenderManager::Render()
 		}
 		*/
 
-		Transform* tmpModelTransform;
-		ModelComponent* tmpModelComponent;
-		for (int i = 0; i < (int)gameObjectList.size(); i++)
+		if (!DrawModels())
 		{
-			tmpModelTransform = gameObjectList[i]->GetComponent<Transform>();
-			tmpModelComponent = gameObjectList[i]->GetComponent<ModelComponent>();
+			MessageBox(0, L"Draw Models - Failed",
+				L"Error", MB_OK);
 
-			if (tmpModelTransform == nullptr || tmpModelComponent == nullptr)
-				break;
-
-			// 스케일
-			scaleMatrix = XMMatrixScaling(tmpModelTransform->_scale.x, tmpModelTransform->_scale.y, tmpModelTransform->_scale.z);
-
-			// Y축 기준으로 회전시킨다
-			rotationMatrix = XMMatrixRotationY(rotation);
-
-			// 모델의 위치로 월드 행렬 이동
-			translateMatrix = XMMatrixTranslation(tmpModelTransform->_position.x, tmpModelTransform->_position.y, tmpModelTransform->_position.z);
-
-			// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
-			resultMatrix = scaleMatrix * rotationMatrix * translateMatrix;
-
-			// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
-			tmpModelComponent->Render(m_d3dClass->GetDeviceContext());
-
-			if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), tmpModelComponent->GetIndexCount(), tmpModelComponent->GetShaderType(),
-				resultMatrix, viewMatrix, projectionMatrix,
-				tmpModelComponent->GetTexture(), m_light->GetDirection(), tmpModelComponent->GetDiffuseColor()))//m_light->GetDiffuseColor()))
-			{
-				MessageBox(0, L"ShaderManager Render - Failed",
-					L"Error", MB_OK);
-
-				return false;
-			}
-
-			scaleMatrix = worldMatrix;
-			rotationMatrix = worldMatrix;
-			translateMatrix = worldMatrix;
+			return false;
 		}
-		
+
 		// 버퍼의 내용을 화면에 출력한다
 		m_d3dClass->EndScene();
 	}
+	return true;
+}
+
+// GameObject의 ModelComponent 그리기
+bool RenderManager::DrawModels()
+{
+	Transform* tmpModelTransform;
+	ModelComponent* tmpModelComponent;
+	for (int i = 0; i < (int)gameObjectList.size(); i++)
+	{
+		tmpModelTransform = gameObjectList[i]->GetComponent<Transform>();
+		tmpModelComponent = gameObjectList[i]->GetComponent<ModelComponent>();
+
+		if (tmpModelTransform == nullptr || tmpModelComponent == nullptr)
+		{
+			return false;
+		}
+
+		// 스케일
+		scaleMatrix = XMMatrixScaling(tmpModelTransform->_scale.x, tmpModelTransform->_scale.y, tmpModelTransform->_scale.z);
+
+		// Y축 기준으로 회전시킨다
+		rotationMatrix = XMMatrixRotationY(rotation);
+
+		// 모델의 위치로 월드 행렬 이동
+		translateMatrix = XMMatrixTranslation(tmpModelTransform->_position.x, tmpModelTransform->_position.y, tmpModelTransform->_position.z);
+
+		// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
+		resultMatrix = scaleMatrix * rotationMatrix * translateMatrix;
+
+		// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
+		tmpModelComponent->Render(m_d3dClass->GetDeviceContext());
+
+		if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), tmpModelComponent->GetIndexCount(), tmpModelComponent->GetShaderType(),
+			resultMatrix, viewMatrix, projectionMatrix,
+			tmpModelComponent->GetTexture(), m_light->GetDirection(), tmpModelComponent->GetDiffuseColor()))//m_light->GetDiffuseColor()))
+		{
+			MessageBox(0, L"ShaderManager Render - Failed",
+				L"Error", MB_OK);
+
+			return false;
+		}
+
+		scaleMatrix = worldMatrix;
+		rotationMatrix = worldMatrix;
+		translateMatrix = worldMatrix;
+	}
+
 	return true;
 }
 

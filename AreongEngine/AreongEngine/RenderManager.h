@@ -20,6 +20,7 @@ public:
 
 	bool Init(int screenWidth, int screenHeight, HWND hWnd);
 	bool Render();
+	bool DrawModels();
 
 	void MakeCube();
 	void SelectPlayer();
