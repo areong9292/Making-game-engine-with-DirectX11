@@ -249,6 +249,7 @@ bool RenderManager::Render()
 		}
 		*/
 
+		// 모델 그리기
 		if (!DrawModels())
 		{
 			MessageBox(0, L"Draw Models - Failed",
@@ -256,6 +257,9 @@ bool RenderManager::Render()
 
 			return false;
 		}
+
+		// 게임 오브젝트가 가지고 있는 모든 컴포넌트 업데이트
+		UpdateComponents();
 
 		// 버퍼의 내용을 화면에 출력한다
 		m_d3dClass->EndScene();
@@ -309,6 +313,14 @@ bool RenderManager::DrawModels()
 	}
 
 	return true;
+}
+
+void RenderManager::UpdateComponents()
+{
+	for (int i = 0; i < (int)gameObjectList.size(); i++)
+	{
+		gameObjectList[i]->UpdateComponents();
+	}
 }
 
 void RenderManager::MakeCube()

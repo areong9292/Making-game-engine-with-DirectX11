@@ -55,6 +55,7 @@ ModelComponent::~ModelComponent()
 
 void ModelComponent::UpdateComponent()
 {
+	//cout << "ModelComponent Update" << endl;
 }
 
 bool ModelComponent::Initialize(ID3D11Device* device, WCHAR* textureFilename, WCHAR* modelFileName)

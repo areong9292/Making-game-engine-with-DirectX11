@@ -22,6 +22,7 @@ public:
 	bool Render();
 	bool DrawModels();
 
+	void UpdateComponents();
 	void MakeCube();
 	void SelectPlayer();
 
