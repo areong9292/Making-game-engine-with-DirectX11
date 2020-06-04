@@ -155,6 +155,8 @@
     <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="AreongEngine.h" />
     <ClInclude Include="CameraClass.h" />
+    <ClInclude Include="ComponentIncludes.h" />
+    <ClInclude Include="Components\ModelComponent.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DesignPattern\Component.h" />
     <ClInclude Include="DesignPattern\DesignPatternIncludes.h" />
@@ -180,6 +182,7 @@
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp" />
     <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="Components\ModelComponent.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="DesignPattern\Component.cpp" />
     <ClCompile Include="DesignPattern\GameObject.cpp" />

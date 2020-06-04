@@ -5,6 +5,7 @@
 #include "ModelClass.h"
 #include "LightClass.h"
 #include "ShaderManager.h"
+#include "ComponentIncludes.h"
 
 RenderManager::RenderManager()
 {
@@ -33,6 +34,17 @@ RenderManager::~RenderManager()
 		{
 			delete temp;
 			temp = nullptr;
+		}
+	}
+
+	GameObject* tempObj;
+	for (int i = 0; i < (int)gameObjectList.size(); i++)
+	{
+		tempObj = gameObjectList[i];
+		if (tempObj != nullptr)
+		{
+			delete tempObj;
+			tempObj = nullptr;
 		}
 	}
 
@@ -151,6 +163,24 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		return false;
 	}
 
+	ModelComponent* testModelComponent = testObj->AddComponent<ModelComponent>();
+	if (testModelComponent == nullptr)
+	{
+		MessageBox(0, L"Add ModelComponent - Failed",
+			L"Error", MB_OK);
+		return false;
+	}
+
+	if (!testModelComponent->Initialize(m_d3dClass->GetDevice(), L"./Resources/Textures/seafloor.dds", L"./Resources/Models/Parsed/scrat"))
+	{
+		MessageBox(0, L"ModelComponent Initialization - Failed",
+			L"Error", MB_OK);
+
+		return false;
+	}
+
+	gameObjectList.push_back(testObj);
+
 	return true;
 }
 
@@ -178,15 +208,19 @@ bool RenderManager::Render()
 		m_camera->GetViewMatrix(viewMatrix);
 		m_d3dClass->GetProjectionMatrix(projectionMatrix);
 
+		scaleMatrix = worldMatrix;
 		rotationMatrix = worldMatrix;
 		translateMatrix = worldMatrix;
 
 		// 회전 적용
 		//worldMatrix = XMMatrixRotationY(rotation);
 
-		for (int i = 0; i < (int)modelList.size(); i++)
+		/*for (int i = 0; i < (int)modelList.size(); i++)
 		{
 			modelPosition = modelList[i]->GetPosition();
+
+			// 스케일 1배
+			scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 
 			// Y축 기준으로 회전시킨다
 			rotationMatrix = XMMatrixRotationY(rotation);
@@ -195,7 +229,7 @@ bool RenderManager::Render()
 			translateMatrix = XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z);
 
 			// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
-			resultMatrix = /*scaleMatrix **/ rotationMatrix * translateMatrix;
+			resultMatrix = scaleMatrix * rotationMatrix * translateMatrix;
 
 			// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
 			modelList[i]->Render(m_d3dClass->GetDeviceContext());
@@ -210,6 +244,47 @@ bool RenderManager::Render()
 				return false;
 			}
 
+			rotationMatrix = worldMatrix;
+			translateMatrix = worldMatrix;
+		}
+		*/
+
+		Transform* tmpModelTransform;
+		ModelComponent* tmpModelComponent;
+		for (int i = 0; i < (int)gameObjectList.size(); i++)
+		{
+			tmpModelTransform = gameObjectList[i]->GetComponent<Transform>();
+			tmpModelComponent = gameObjectList[i]->GetComponent<ModelComponent>();
+
+			if (tmpModelTransform == nullptr || tmpModelComponent == nullptr)
+				break;
+
+			// 스케일
+			scaleMatrix = XMMatrixScaling(tmpModelTransform->_scale.x, tmpModelTransform->_scale.y, tmpModelTransform->_scale.z);
+
+			// Y축 기준으로 회전시킨다
+			rotationMatrix = XMMatrixRotationY(rotation);
+
+			// 모델의 위치로 월드 행렬 이동
+			translateMatrix = XMMatrixTranslation(tmpModelTransform->_position.x, tmpModelTransform->_position.y, tmpModelTransform->_position.z);
+
+			// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
+			resultMatrix = scaleMatrix * rotationMatrix * translateMatrix;
+
+			// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
+			tmpModelComponent->Render(m_d3dClass->GetDeviceContext());
+
+			if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), tmpModelComponent->GetIndexCount(), tmpModelComponent->GetShaderType(),
+				resultMatrix, viewMatrix, projectionMatrix,
+				tmpModelComponent->GetTexture(), m_light->GetDirection(), tmpModelComponent->GetDiffuseColor()))//m_light->GetDiffuseColor()))
+			{
+				MessageBox(0, L"ShaderManager Render - Failed",
+					L"Error", MB_OK);
+
+				return false;
+			}
+
+			scaleMatrix = worldMatrix;
 			rotationMatrix = worldMatrix;
 			translateMatrix = worldMatrix;
 		}
@@ -278,3 +353,4 @@ void RenderManager::SelectPlayer()
 	m_selectedModel->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 }
+

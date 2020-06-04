@@ -41,16 +41,16 @@ private:
 
 	float rotation = 0.0f;
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	XMMATRIX rotationMatrix, translateMatrix, resultMatrix;
+	XMMATRIX scaleMatrix, rotationMatrix, translateMatrix, resultMatrix;
 
 	vector<ModelClass*> modelList;
+	vector<GameObject*> gameObjectList;
 
 	XMFLOAT3 modelPosition;
 
 	int _selectIndex = 0;
 
 	ModelClass* m_selectedModel = nullptr;
-
 
 	GameObject* testObj = nullptr;
 	Transform* testTransform;

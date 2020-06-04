@@ -52,8 +52,8 @@ inline T * GameObject::AddComponent()
 
 	// 상속관계가 맞을 경우 새로운 컴포넌트 객체 생성 후
 	// 초기화 작업 후 리스트에 넣어준다
-	T* component = new T(this);
-	_components.push_back(component);
+	T* component = new T();
+	_listComponent.push_back(component);
 
 	return component;
 }
