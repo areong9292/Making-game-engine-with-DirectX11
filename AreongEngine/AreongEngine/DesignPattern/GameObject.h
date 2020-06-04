@@ -10,6 +10,8 @@ public:
 	GameObject(string name);
 	~GameObject();
 
+	void UpdateComponents();
+
 	void SetName(string name);
 
 	template <typename T> T* GetComponent();

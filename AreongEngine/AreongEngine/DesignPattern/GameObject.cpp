@@ -25,6 +25,15 @@ GameObject::~GameObject()
 	}
 }
 
+// 매 프레임마다 호출
+void GameObject::UpdateComponents()
+{
+	for (int i = 0; i < (int)_listComponent.size(); i++)
+	{
+		_listComponent[i]->UpdateComponent();
+	}
+}
+
 void GameObject::SetName(string name)
 {
 	_name = name;
