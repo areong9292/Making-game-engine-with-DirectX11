@@ -16,6 +16,12 @@ void PhysicsComponent::UpdateComponent()
 	// 2. 컴포넌트끼리 통신을 만들어서 할까?
 
 	//cout << "PhysicsComponent Update" << endl;
+	if (objTransform != nullptr)
+	{
+		objTransform->_position.y -= 0.18;
+		if (objTransform->_position.y <= 0)
+			objTransform->_position.y == 0;
+	}
 }
 
 bool PhysicsComponent::Init(Transform * transform)

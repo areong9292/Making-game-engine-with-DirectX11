@@ -14,6 +14,6 @@ public:
 	bool Init(Transform* transform);
 
 private:
-	Transform* objTransform;
+	Transform* objTransform = nullptr;
 };
 
