@@ -401,6 +401,4 @@ void RenderManager::SelectPlayer()
 
 	m_selectedModel = modelList[_selectIndex];
 	m_selectedModel->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);
-
 }
-
