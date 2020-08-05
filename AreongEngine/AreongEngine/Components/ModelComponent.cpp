@@ -3,6 +3,9 @@
 
 ModelComponent::ModelComponent()
 {
+	// 컴포넌트 이름 셋팅
+	SetComponentName("ModelComponent");
+
 	SetPosition(0.0, 0.0f, 0.0f);
 	SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 
