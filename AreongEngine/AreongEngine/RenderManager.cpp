@@ -180,25 +180,22 @@ bool RenderManager::Init(int screenWidth, int screenHeight, HWND hWnd)
 		return false;
 	}
 
-	PhysicsComponent* testPhysicsComponent = testObj->AddComponent<PhysicsComponent>();
-	if (testPhysicsComponent == nullptr)
+	RigidbodyComponent* testRigidbody = testObj->AddComponent<RigidbodyComponent>();
+	if (testRigidbody == nullptr)
 	{
-		if (testModelComponent == nullptr)
+		if (testRigidbody == nullptr)
 		{
-			MessageBox(0, L"Add PhysicsComponent - Failed",
+			MessageBox(0, L"Add RigidbodyComponent - Failed",
 				L"Error", MB_OK);
 			return false;
 		}
 	}
 
-	if (!testPhysicsComponent->Init(testObj->GetComponent<Transform>()))
+	if (!testRigidbody->Init(testObj->GetComponent<Transform>()))
 	{
-		if (testModelComponent == nullptr)
-		{
-			MessageBox(0, L"PhysicsComponent Initialization - Failed",
-				L"Error", MB_OK);
-			return false;
-		}
+		MessageBox(0, L"PhysicsComponent Initialization - Failed",
+			L"Error", MB_OK);
+		return false;	
 	}
 
 	gameObjectList.push_back(testObj);

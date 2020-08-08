@@ -105,7 +105,10 @@
     <ClInclude Include="ComponentIncludes.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Components\PhysicsComponent.h">
+    <ClInclude Include="Components\Collider.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RigidbodyComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -164,7 +167,10 @@
     <ClCompile Include="Components\ModelComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\PhysicsComponent.cpp">
+    <ClCompile Include="Components\Collider.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RigidbodyComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,11 +2,11 @@
 #include "../DesignPattern/Component.h"
 #include "../DesignPattern/Transform.h"
 
-class PhysicsComponent : public Component
+class RigidbodyComponent : public Component
 {
 public:
-	PhysicsComponent();
-	~PhysicsComponent();
+	RigidbodyComponent();
+	~RigidbodyComponent();
 
 	// 매 프레임마다 호출
 	virtual void UpdateComponent() override;
