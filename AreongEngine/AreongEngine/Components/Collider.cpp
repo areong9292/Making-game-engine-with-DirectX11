@@ -1,4 +1,5 @@
 #include "Collider.h"
+#include "RigidbodyComponent.h"
 
 Collider::Collider()
 {

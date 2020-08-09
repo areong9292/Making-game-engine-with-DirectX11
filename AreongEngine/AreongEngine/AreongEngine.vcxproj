@@ -155,6 +155,7 @@
     <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="AreongEngine.h" />
     <ClInclude Include="CameraClass.h" />
+    <ClInclude Include="ColliderManager.h" />
     <ClInclude Include="ComponentIncludes.h" />
     <ClInclude Include="Components\Collider.h" />
     <ClInclude Include="Components\ModelComponent.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="AreongEngine.cpp" />
     <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="ColliderManager.cpp" />
     <ClCompile Include="Components\Collider.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
     <ClCompile Include="Components\RigidbodyComponent.cpp" />

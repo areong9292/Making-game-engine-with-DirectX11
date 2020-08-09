@@ -1,8 +1,8 @@
 #pragma once
 #include "../DesignPattern/Component.h"
 #include "../DesignPattern/GameObject.h"
-#include "RigidbodyComponent.h"
 
+class RigidbodyComponent;
 // 충돌을 담당하는 컴포넌트
 class Collider : public Component
 {

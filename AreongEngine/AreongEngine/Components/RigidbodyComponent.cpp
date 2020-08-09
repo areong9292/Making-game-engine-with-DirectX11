@@ -1,7 +1,16 @@
 #include "RigidbodyComponent.h"
+#include "Collider.h"
+#include "../ColliderManager.h"
 
 RigidbodyComponent::RigidbodyComponent()
 {
+	// 리지드 바디는 콜라이더 매니저를 참조하고 있는다
+	m_colliderManager = Singleton<ColliderManager>::GetInstance();
+}
+
+RigidbodyComponent::RigidbodyComponent(Collider* collider)
+{
+	objCollider = collider;
 }
 
 RigidbodyComponent::~RigidbodyComponent()
@@ -18,9 +27,17 @@ void RigidbodyComponent::UpdateComponent()
 	//cout << "RigidbodyComponent Update" << endl;
 	if (objTransform != nullptr)
 	{
-		objTransform->_position.y -= 0.18;
-		if (objTransform->_position.y <= 0)
-			objTransform->_position.y == 0;
+		// 물리 적용 가능?
+		if (m_colliderManager != nullptr)
+		{
+			// 리지드 바디가 가진 콜라이더와 다른 콜라이더들과 충돌이 없는 경우
+			if (m_colliderManager->CheckCollider(objCollider).size() == 0)
+			{
+				objTransform->_position.y -= 0.18;
+				if (objTransform->_position.y <= 0)
+					objTransform->_position.y == 0;
+			}
+		}
 	}
 }
 

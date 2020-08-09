@@ -231,42 +231,8 @@ bool RenderManager::Render()
 		rotationMatrix = worldMatrix;
 		translateMatrix = worldMatrix;
 
-		// 회전 적용
-		//worldMatrix = XMMatrixRotationY(rotation);
-
-		/*for (int i = 0; i < (int)modelList.size(); i++)
-		{
-			modelPosition = modelList[i]->GetPosition();
-
-			// 스케일 1배
-			scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-
-			// Y축 기준으로 회전시킨다
-			rotationMatrix = XMMatrixRotationY(rotation);
-
-			// 모델의 위치로 월드 행렬 이동
-			translateMatrix = XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z);
-
-			// 최종 월드 행렬 계산 - 스케일 * 회전 * 이동 행렬을 곱해서 원하는 결과를 얻는다
-			resultMatrix = scaleMatrix * rotationMatrix * translateMatrix;
-
-			// 모델의 버텍스, 인덱스 버퍼를 그래픽 파이프라인(입력 어셈블러)에 전달하여 그리기를 준비한다
-			modelList[i]->Render(m_d3dClass->GetDeviceContext());
-
-			if (!m_shaderManager->Render(m_d3dClass->GetDeviceContext(), modelList[i]->GetIndexCount(), modelList[i]->GetShaderType(),
-				resultMatrix, viewMatrix, projectionMatrix,
-				modelList[i]->GetTexture(), m_light->GetDirection(), modelList[i]->GetDiffuseColor()))//m_light->GetDiffuseColor()))
-			{
-				MessageBox(0, L"ShaderManager Render - Failed",
-					L"Error", MB_OK);
-
-				return false;
-			}
-
-			rotationMatrix = worldMatrix;
-			translateMatrix = worldMatrix;
-		}
-		*/
+		// 게임 오브젝트가 가지고 있는 모든 컴포넌트 업데이트
+		UpdateComponents();
 
 		// 모델 그리기
 		if (!DrawModels())
@@ -276,9 +242,6 @@ bool RenderManager::Render()
 
 			return false;
 		}
-
-		// 게임 오브젝트가 가지고 있는 모든 컴포넌트 업데이트
-		UpdateComponents();
 
 		// 버퍼의 내용을 화면에 출력한다
 		m_d3dClass->EndScene();
@@ -334,6 +297,7 @@ bool RenderManager::DrawModels()
 	return true;
 }
 
+// 모든 게임 오브젝트의 컴포넌트 Update
 void RenderManager::UpdateComponents()
 {
 	for (int i = 0; i < (int)gameObjectList.size(); i++)
