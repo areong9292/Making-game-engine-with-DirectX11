@@ -11,5 +11,5 @@ ToDo List
   - Make Sphere, Cube, Capsule Collider
  
  Model Animation
-  - How to..?
+  - How to...?
 
